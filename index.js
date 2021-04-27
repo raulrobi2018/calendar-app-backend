@@ -10,6 +10,9 @@ const app = express();
 //hace una petición al servidor
 app.use(express.static("public"));
 
+//Lectura y parseo del body
+app.use(express.json());
+
 //Todo lo que haya en el archivo auth.js lo va a habilitar
 //en la ruta api/auth
 app.use("/api/auth", require("./routes/auth"));
