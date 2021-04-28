@@ -5,8 +5,8 @@ require("dotenv").config();
 const app = express();
 
 //Public directory
-//El use es un middlewere de express
-//Un middlewere es una función que se ejecuta en el momento que alguien
+//El use es un middleware de express
+//Un middleware es una función que se ejecuta en el momento que alguien
 //hace una petición al servidor
 app.use(express.static("public"));
 

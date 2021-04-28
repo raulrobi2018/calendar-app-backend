@@ -1,26 +1,40 @@
 //No es necesario esta importación. Se hace para que funcione
 //la ayuda de código
 const {response} = require("express");
+const {validationResult} = require("express-validator");
 
 //También aquí el " = response " se hace para que funcione
 //la ayuda de código
 const createUser = (req, res = response) => {
     const {name, email, password} = req.body;
 
-    // Esta validación es solo a modo de ejemplo para ver el uso
-    //de los status del response
-    if (name.length < 5) {
+    //Manejo de errores
+    const errors = validationResult(req);
+
+    //Si hay errores retorna un json con el detalle de errores
+    if (!errors.isEmpty()) {
         return res.status(400).json({
             ok: false,
-            msg: "The username must be greather than 5 letters"
+            errors: errors.mapped()
         });
     }
 
-    res.json({ok: true, user: req.body});
+    res.status(201).json({ok: true, user: req.body});
 };
+
 const loginUser = (req, res) => {
-    const {email, password} = req.body;
-    res.json({ok: true, msg: "Login"});
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            ok: false,
+            errors: errors.mapped()
+        });
+    }
+
+    res.status(200).json({
+        ok: true
+    });
 };
 const renewToken = (req, res = response) => {
     res.json({ok: true, msg: "Renew token"});

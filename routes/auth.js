@@ -1,4 +1,5 @@
 const {Router} = require("express");
+const {check} = require("express-validator");
 const router = Router();
 const {createUser, loginUser, renewToken} = require("../controlers/auth");
 
@@ -7,9 +8,39 @@ const {createUser, loginUser, renewToken} = require("../controlers/auth");
     host + /api/auth
 */
 
-router.post("/new", createUser);
+router.post(
+    "/new",
+    [
+        //middlewares
 
-router.post("/", loginUser);
+        //El name es obligatorio y no debe estar vacío
+        check("name", "The name is required").not().isEmpty(),
+        check("email", "The email is required").isEmail(),
+        check(
+            "password",
+            "The password must be greater than 5 characters"
+        ).isLength({
+            min: 6
+        })
+    ],
+    createUser
+);
+
+router.post(
+    "/",
+    [
+        //middlewares
+        //El email debe ser válido
+        check("email", "The email is required").isEmail(),
+        check(
+            "password",
+            "The password must be greater than 5 characters"
+        ).isLength({
+            min: 6
+        })
+    ],
+    loginUser
+);
 
 router.post("/renew", renewToken);
 
