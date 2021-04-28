@@ -1,6 +1,7 @@
 const {Router} = require("express");
 const {check} = require("express-validator");
 const router = Router();
+const {validateFields} = require("../middlewares/field-validators");
 const {createUser, loginUser, renewToken} = require("../controlers/auth");
 
 /*
@@ -21,7 +22,8 @@ router.post(
             "The password must be greater than 5 characters"
         ).isLength({
             min: 6
-        })
+        }),
+        validateFields
     ],
     createUser
 );
@@ -37,7 +39,8 @@ router.post(
             "The password must be greater than 5 characters"
         ).isLength({
             min: 6
-        })
+        }),
+        validateFields
     ],
     loginUser
 );
