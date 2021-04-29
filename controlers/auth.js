@@ -7,15 +7,25 @@ const User = require("../models/User");
 //También aquí el " = response " se hace para que funcione
 //la ayuda de código
 const createUser = async (req, res = response) => {
-    try {
-        const user = new User(req.body);
+    const {email, password} = req.body;
 
+    try {
+        let user = await User.findOne({email: email});
+
+        if (user) {
+            return res.status(400).json({
+                ok: false,
+                msg: "The user already exist"
+            });
+        }
+
+        user = new User(req.body);
         //Guarda en base de datos de Mongo
         //De acuerdo al modelo definido para User, Mongoose ya sabe cuales son los
         //valores para los campos a grabar tomándoloes del req.body enviados en la petición
         await user.save();
 
-        res.status(201).json({ok: true, user: req.body});
+        res.status(201).json({ok: true, uid: user.id, name: user.name});
     } catch (error) {
         console.log(error);
         res.status(500).json({
