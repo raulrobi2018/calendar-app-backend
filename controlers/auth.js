@@ -4,6 +4,8 @@ const {response} = require("express");
 
 const User = require("../models/User");
 
+const bcrypt = require("bcryptjs");
+
 //También aquí el " = response " se hace para que funcione
 //la ayuda de código
 const createUser = async (req, res = response) => {
@@ -19,7 +21,12 @@ const createUser = async (req, res = response) => {
             });
         }
 
-        user = new User(req.body);
+        user = new User({
+            // Envio todas las propiedades del usuario y luego vuelvo a setear el password
+            ...req.body,
+            // Utiliza 10 número de vueltas para generarla
+            password: bcrypt.hashSync(password, 10)
+        });
         //Guarda en base de datos de Mongo
         //De acuerdo al modelo definido para User, Mongoose ya sabe cuales son los
         //valores para los campos a grabar tomándoloes del req.body enviados en la petición
