@@ -88,8 +88,16 @@ const loginUser = async (req, res) => {
         });
     }
 };
-const renewToken = (req, res = response) => {
-    res.json({ok: true, msg: "Renew token"});
+
+const renewToken = async (req, res = response) => {
+    //variables que vienen del validateJWT
+    const uid = req.uid;
+    const name = req.name;
+
+    //Generar JWT
+    const token = await generateJWT(uid, name);
+
+    res.json({ok: true, token});
 };
 
 module.exports = {
