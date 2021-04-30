@@ -6,6 +6,8 @@ const User = require("../models/User");
 
 const bcrypt = require("bcryptjs");
 
+const {generateJWT} = require("../helpers/jwt");
+
 //También aquí el " = response " se hace para que funcione
 //la ayuda de código
 const createUser = async (req, res = response) => {
@@ -32,7 +34,10 @@ const createUser = async (req, res = response) => {
         //valores para los campos a grabar tomándoloes del req.body enviados en la petición
         await user.save();
 
-        res.status(201).json({ok: true, uid: user.id, name: user.name});
+        //Generar JWT
+        const token = await generateJWT(user.id, user.name);
+
+        res.status(201).json({ok: true, uid: user.id, name: user.name, token});
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -66,10 +71,14 @@ const loginUser = async (req, res) => {
             });
         }
 
+        //Generar JWT
+        const token = await generateJWT(user.id, user.name);
+
         res.status(200).json({
             ok: true,
             uid: user.id,
-            name: user.name
+            name: user.name,
+            token
         });
     } catch (error) {
         console.log(error);
