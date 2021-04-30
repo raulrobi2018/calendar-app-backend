@@ -42,10 +42,42 @@ const createUser = async (req, res = response) => {
     }
 };
 
-const loginUser = (req, res) => {
-    res.status(200).json({
-        ok: true
-    });
+const loginUser = async (req, res) => {
+    const {email, password} = req.body;
+
+    try {
+        let user = await User.findOne({email: email});
+
+        if (!user) {
+            return res.status(400).json({
+                ok: false,
+                msg: "The user doesn't exist"
+            });
+        }
+
+        //Validate password
+        //Compara password ingresada con la de la base de datos
+        const validPassword = bcrypt.compareSync(password, user.password);
+
+        if (!validPassword) {
+            return res.status(400).json({
+                ok: false,
+                msg: "Password incorrect"
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            uid: user.id,
+            name: user.name
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: "Please contact the administrator"
+        });
+    }
 };
 const renewToken = (req, res = response) => {
     res.json({ok: true, msg: "Renew token"});
