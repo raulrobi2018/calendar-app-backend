@@ -44,34 +44,17 @@ router.put(
     "/:id",
     [
         //middlewares
-        //El email debe ser válido
+        //El name es obligatorio y no debe estar vacío
         check("title", "The title is required").not().isEmpty(),
-        check(
-            "password",
-            "The password must be greater than 5 characters"
-        ).isLength({
-            min: 6
-        }),
+        check("start", "The start date is required").not().isDate(),
+        // Otra forma de validar la fecha pero con un validator personalizado
+        // check("start", "The start date is required").custom(isDate),
+        check("end", "The end date is required").not().isDate(),
         validateFields
     ],
     updateEvent
 );
 
-router.delete(
-    "/:id",
-    [
-        //middlewares
-        //El email debe ser válido
-        check("email", "The email is required").isEmail(),
-        check(
-            "password",
-            "The password must be greater than 5 characters"
-        ).isLength({
-            min: 6
-        }),
-        validateFields
-    ],
-    deleteEvent
-);
+router.delete("/:id", deleteEvent);
 
 module.exports = router;
