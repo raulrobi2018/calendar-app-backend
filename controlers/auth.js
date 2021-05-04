@@ -19,7 +19,7 @@ const createUser = async (req, res = response) => {
         if (user) {
             return res.status(400).json({
                 ok: false,
-                msg: "The user already exist"
+                msg: "El usuario ya existe"
             });
         }
 
@@ -67,7 +67,7 @@ const loginUser = async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: "Password incorrect"
+                msg: "User or password incorrect"
             });
         }
 
@@ -97,7 +97,7 @@ const renewToken = async (req, res = response) => {
     //Generar JWT
     const token = await generateJWT(uid, name);
 
-    res.json({ok: true, token});
+    res.json({ok: true, uid, name, token});
 };
 
 module.exports = {
